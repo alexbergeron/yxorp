@@ -4,18 +4,18 @@ package xyorp
 case class RoutesManager(services: Map[ServiceName, Service], ingresses: Map[IngressName, Ingress]) {
 
   lazy val pathsToServices: Map[Path, Service] = ingresses.flatMap {
-    case (_, Ingress(_, rules)) =>
+    case (_, Ingress(_, rules)) ⇒
       rules.map {
-        case IngressRule(path, service) => path -> service
+        case IngressRule(path, serviceName) ⇒ path → services(serviceName) //TODO
       }
   }.toMap
 
-  def serviceFor(path: Path): Try[Service] = {
+  def serviceFor(path: Path): Either[String, Service] = {
     // Best practice between choosing first or alerting on conflict
     // Incoherent - two source of truths for available paths
-    pathsToServices.keys.find(ingressPath => pathMatch(path, ingressPath)).map(pathToService) match {
-      case Some(s) => Right(s)
-      case None => Left("Service not found")
+    pathsToServices.keys.find(ingressPath ⇒ pathMatch(path, ingressPath)).map(pathsToServices) match {
+      case Some(s) ⇒ Right(s)
+      case None    ⇒ Left("Service not found")
     }
   }
 
@@ -27,15 +27,15 @@ case class RoutesManager(services: Map[ServiceName, Service], ingresses: Map[Ing
     if (services.contains(service.name)) {
       copy(services = services.updated(service.name, service))
     } else {
-      copy(services = services + (service.name -> service))
+      copy(services = services + (service.name → service))
     }
   }
 
   def withNewIngress(ingress: Ingress): RoutesManager = {
-    if (ingresss.contains(ingress.name)) {
-      copy(ingresss = ingresss.updated(ingress.name, ingress))
+    if (ingresses.contains(ingress.name)) {
+      copy(ingresses = ingresses.updated(ingress.name, ingress))
     } else {
-      copy(ingresss = ingresss + (ingress.name -> ingress))
+      copy(ingresses = ingresses + (ingress.name → ingress))
     }
   }
 }

@@ -6,13 +6,13 @@ class Controller(manager: RoutesManagerHolder) {
   type Response = Nothing
 
   def routes: PartialFunction[Request, Response] = {
-    case s"/${path}" =>
+    case path ⇒
       manager.value.serviceFor(Path(path)) match {
-        case Right(s) => delegateTo(s)
-        case Left(msg) => error(msg)
+        case Right(s)  ⇒ delegateTo(s)
+        case Left(msg) ⇒ error(msg)
       }
   }
 
-  def delegateTo(s: Service) = ???
-  def error(s: String) = ???
+  def delegateTo(s: Service): Response = ???
+  def error(s: String): Response = ???
 }
