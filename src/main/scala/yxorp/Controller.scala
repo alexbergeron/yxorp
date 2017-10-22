@@ -1,18 +1,13 @@
 package xyorp
 
-// Arbitrary controller - one of my choices would provably look similar
+import io.finch._
+
 class Controller(manager: RoutesManagerHolder) {
-  type Request = String
-  type Response = Nothing
 
-  def routes: PartialFunction[Request, Response] = {
-    case path ⇒
-      manager.value.serviceFor(Path(path)) match {
-        case Right(s)  ⇒ delegateTo(s)
-        case Left(msg) ⇒ error(msg)
-      }
+  val routeGet: Endpoint[String] = get(paths[String]) { (p: Seq[String]) ⇒
+    manager.value.serviceFor(Path(p.mkString("/"))) match {
+      case Right(s)  ⇒ Ok(s.toString)
+      case Left(msg) ⇒ NotFound(new Exception(msg))
+    }
   }
-
-  def delegateTo(s: Service): Response = ???
-  def error(s: String): Response = ???
 }
