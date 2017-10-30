@@ -1,14 +1,13 @@
-package xyorp
+package yxorp
 
-// Somewhat of an absurdity caused by being on a place and not in a good state to figure out what is be available to me
-case class RoutesManagerHolder(@volatile private var _value: RoutesManager) {
+class RoutesManagerHolder(@volatile private var _value: RoutesManager) {
   def value = _value
 
-  def withNewService(service: Service): Unit = {
+  def withNewService(service: KubeService): Unit = {
     _value = value.withNewService(service)
   }
 
-  def withNewIngress(ingress: Ingress): Unit = {
+  def withNewIngress(ingress: KubeIngress): Unit = {
     _value = value.withNewIngress(ingress)
   }
 }

@@ -36,18 +36,19 @@ lazy val root = (project in file(".")).
 		.setPreference(DoubleIndentConstructorArguments, true)
 		.setPreference(PlaceScaladocAsterisksBeneathSecondAsterisk, true)
 		.setPreference(RewriteArrowSymbols, true),
-	name := "xyrop",
+	name := "yxorp",
 	libraryDependencies ++= Seq(
     "com.github.finagle" %% "finch-core" % "0.16.0-M3",
-		"org.typelevel" %% "cats-core" % "1.0.0-MF",
-		"org.typelevel" %% "cats-free" % "1.0.0-MF",
-    "org.typelevel" %% "cats-effect" % "0.4",
+    //"com.softwaremill.macwire" %% "macros" % "2.3.0",
+		//"org.typelevel" %% "cats-core" % "1.0.0-MF",
+		//"org.typelevel" %% "cats-free" % "1.0.0-MF",
+    //"org.typelevel" %% "cats-effect" % "0.4",
 		"io.fabric8" % "kubernetes-client" % "2.6.2",
-    "io.monix" %% "monix" % "3.0.0-M1",
+    //"io.monix" %% "monix" % "3.0.0-M1",
     "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.6",
 
-		"org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
-		"org.scalatest" %% "scalatest" % "3.0.1" % "test"
+		//"org.scalacheck" %% "scalacheck" % "1.13.4" % "test",
+		//"org.scalatest" %% "scalatest" % "3.0.1" % "test"
 	)
 )
 

@@ -1,11 +1,12 @@
-package xyorp
+package yxorp
 
-case class ServiceName(name: String) extends AnyVal
-case class IngressName(name: String) extends AnyVal
+case class KubeServiceName(name: String) extends AnyVal
+case class KubeIngressName(name: String) extends AnyVal
 case class Address(address: String) extends AnyVal
 case class Path(path: String) extends AnyVal
 
-case class IngressRule(path: Path, serviceName: ServiceName)
-case class Ingress(name: IngressName, rules: Seq[IngressRule])
+case class KubeIngressRule(path: Path, serviceName: KubeServiceName)
+case class KubeIngress(name: KubeIngressName, rules: Seq[KubeIngressRule])
 
-case class Service(name: ServiceName, addresses: Seq[Address], port: Int)
+case class KubeService(name: KubeServiceName, addresses: Seq[Address], port: Int)
+

@@ -1,21 +1,21 @@
-package xyorp
+package yxorp
 
 // To be handled through an agent-like structure
-case class RoutesManager(services: Map[ServiceName, Service], ingresses: Map[IngressName, Ingress]) {
+case class RoutesManager(services: Map[KubeServiceName, KubeService], ingresses: Map[KubeIngressName, KubeIngress]) {
 
-  lazy val pathsToServices: Map[Path, Service] = ingresses.flatMap {
-    case (_, Ingress(_, rules)) ⇒
+  lazy val pathsToKubeServices: Map[Path, KubeService] = ingresses.flatMap {
+    case (_, KubeIngress(_, rules)) ⇒
       rules.map {
-        case IngressRule(path, serviceName) ⇒ path → services(serviceName) //TODO
+        case KubeIngressRule(path, serviceName) ⇒ path → services(serviceName) //TODO
       }
   }.toMap
 
-  def serviceFor(path: Path): Either[String, Service] = {
+  def serviceFor(path: Path): Either[String, KubeService] = {
     // Best practice between choosing first or alerting on conflict
     // Incoherent - two source of truths for available paths
-    pathsToServices.keys.find(ingressPath ⇒ pathMatch(path, ingressPath)).map(pathsToServices) match {
+    pathsToKubeServices.keys.find(ingressPath ⇒ pathMatch(path, ingressPath)).map(pathsToKubeServices) match {
       case Some(s) ⇒ Right(s)
-      case None    ⇒ Left("Service not found")
+      case None    ⇒ Left("KubeService not found")
     }
   }
 
@@ -23,7 +23,7 @@ case class RoutesManager(services: Map[ServiceName, Service], ingresses: Map[Ing
     requestPath.path.startsWith(ingressPath.path)
   }
 
-  def withNewService(service: Service): RoutesManager = {
+  def withNewService(service: KubeService): RoutesManager = {
     if (services.contains(service.name)) {
       copy(services = services.updated(service.name, service))
     } else {
@@ -31,7 +31,7 @@ case class RoutesManager(services: Map[ServiceName, Service], ingresses: Map[Ing
     }
   }
 
-  def withNewIngress(ingress: Ingress): RoutesManager = {
+  def withNewIngress(ingress: KubeIngress): RoutesManager = {
     if (ingresses.contains(ingress.name)) {
       copy(ingresses = ingresses.updated(ingress.name, ingress))
     } else {
