@@ -7,10 +7,11 @@ object Main {
   def main(args: Array[String]): Unit = {
 
     val client = new KubernetesClient()
+    val forwarder = new RequestForwarder()
     val ingresses = client.getIngresses.map(KubernetesDataConverters.toKubeIngress)
     val routes = RoutesManager.fromIngresses(ingresses)
     val holder = new RoutesManagerHolder(routes)
-    val controller = new Controller(holder)
+    val controller = new Controller(holder, forwarder)
     val watcher = new KubernetesWatcher(client, holder)
 
     watcher.start()

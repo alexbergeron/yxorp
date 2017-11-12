@@ -40,6 +40,7 @@ lazy val root = (project in file(".")).
 	libraryDependencies ++= Seq(
     "com.github.finagle" %% "finch-core" % "0.16.0-M3",
     //"com.softwaremill.macwire" %% "macros" % "2.3.0",
+    "com.squareup.okhttp3" % "okhttp" % "3.9.0",
 		//"org.typelevel" %% "cats-core" % "1.0.0-MF",
 		//"org.typelevel" %% "cats-free" % "1.0.0-MF",
     //"org.typelevel" %% "cats-effect" % "0.4",
