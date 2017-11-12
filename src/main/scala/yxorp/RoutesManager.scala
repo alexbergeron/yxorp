@@ -1,12 +1,12 @@
 package yxorp
 
 // To be handled through an agent-like structure
-case class RoutesManager(services: Map[KubeServiceName, KubeService], ingresses: Map[KubeIngressName, KubeIngress]) {
+case class RoutesManager(ingresses: Map[KubeIngressName, KubeIngress]) {
 
   lazy val pathsToKubeServices: Map[Path, KubeService] = ingresses.flatMap {
     case (_, KubeIngress(_, rules)) ⇒
       rules.map {
-        case KubeIngressRule(path, serviceName) ⇒ path → services(serviceName) //TODO
+        case KubeIngressRule(path, service) ⇒ path → service
       }
   }.toMap
 
@@ -15,20 +15,12 @@ case class RoutesManager(services: Map[KubeServiceName, KubeService], ingresses:
     // Incoherent - two source of truths for available paths
     pathsToKubeServices.keys.find(ingressPath ⇒ pathMatch(path, ingressPath)).map(pathsToKubeServices) match {
       case Some(s) ⇒ Right(s)
-      case None    ⇒ Left("KubeService not found")
+      case None    ⇒ Left(s"KubeService not found for path $path")
     }
   }
 
   def pathMatch(requestPath: Path, ingressPath: Path): Boolean = {
     requestPath.path.startsWith(ingressPath.path)
-  }
-
-  def withNewService(service: KubeService): RoutesManager = {
-    if (services.contains(service.name)) {
-      copy(services = services.updated(service.name, service))
-    } else {
-      copy(services = services + (service.name → service))
-    }
   }
 
   def withNewIngress(ingress: KubeIngress): RoutesManager = {
@@ -37,5 +29,11 @@ case class RoutesManager(services: Map[KubeServiceName, KubeService], ingresses:
     } else {
       copy(ingresses = ingresses + (ingress.name → ingress))
     }
+  }
+}
+
+object RoutesManager {
+  def fromIngresses(ingresses: Seq[KubeIngress]): RoutesManager = {
+    RoutesManager(ingresses.map(i ⇒ i.name -> i).toMap)
   }
 }
