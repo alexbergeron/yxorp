@@ -8,9 +8,9 @@ class Controller(manager: RoutesManagerHolder, forwarder: RequestForwarder) {
 
   val routeGet: Endpoint[String] = get(paths[String]) { (p: Seq[String]) ⇒
     getService(p).flatMap(forwarder.fetch) match {
-      case Success(body)          ⇒ Ok(body)
+      case Success(body) ⇒ Ok(body)
       case Failure(ex: Exception) ⇒ NotFound(ex)
-      case Failure(t)             ⇒ InternalServerError(new Exception(t))
+      case Failure(t) ⇒ InternalServerError(new Exception(t))
     }
   }
 

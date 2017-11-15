@@ -15,7 +15,7 @@ case class RoutesManager(ingresses: Map[KubeIngressName, KubeIngress]) {
     // Incoherent - two source of truths for available paths
     pathsToKubeServices.keys.find(ingressPath ⇒ pathMatch(path, ingressPath)).map(pathsToKubeServices) match {
       case Some(s) ⇒ Right(s)
-      case None    ⇒ Left(s"KubeService not found for path $path")
+      case None ⇒ Left(s"KubeService not found for path $path")
     }
   }
 

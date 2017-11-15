@@ -9,8 +9,7 @@ object KubernetesDataConverters {
   def toKubeIngress(ingress: Ingress): KubeIngress = {
     KubeIngress(
       KubeIngressName(ingress.getMetadata.getName),
-      ingress.getSpec.getRules.asScala.flatMap(toKubeIngressRules)
-    )
+      ingress.getSpec.getRules.asScala.flatMap(toKubeIngressRules))
   }
 
   private def toKubeIngressRules(ingressRule: IngressRule): Seq[KubeIngressRule] = {
@@ -22,9 +21,7 @@ object KubernetesDataConverters {
       Path(ingressRule.getPath),
       KubeService(
         KubeServiceName(ingressRule.getBackend.getServiceName),
-        toKubePort(ingressRule.getBackend.getServicePort)
-      )
-    )
+        toKubePort(ingressRule.getBackend.getServicePort)))
   }
 
   private def toKubePort(port: IntOrString): KubeServicePort = {

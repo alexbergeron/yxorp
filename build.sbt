@@ -1,13 +1,15 @@
-import scalariform.formatter.preferences._
-import com.typesafe.sbt.SbtScalariform
-import com.typesafe.sbt.SbtScalariform.ScalariformKeys
+//import scalariform.formatter.preferences._
+//import com.typesafe.sbt.SbtScalariform
+//import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 
-lazy val root = (project in file(".")).
-  settings(
+lazy val root = (project in file("."))
+  .enablePlugins(JavaAppPackaging)
+  .enablePlugins(DockerPlugin)
+  .settings(
     inThisBuild(List(
       organization := "io.github.alexbergeron",
       scalaVersion := "2.12.4",
-      version      := "0.1.0-SNAPSHOT",
+      version      := "0.1.0",
       resolvers ++= Seq(
         "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/"
       ),
@@ -30,13 +32,15 @@ lazy val root = (project in file(".")).
 				"-Ywarn-unused-import"     // 2.11 only
 		)
 	)),
-	ScalariformKeys.preferences := ScalariformKeys.preferences.value
+/*	ScalariformKeys.preferences := ScalariformKeys.preferences.value
 		.setPreference(AlignSingleLineCaseStatements, true)
 		.setPreference(DanglingCloseParenthesis, Force)
 		.setPreference(DoubleIndentConstructorArguments, true)
 		.setPreference(PlaceScaladocAsterisksBeneathSecondAsterisk, true)
-		.setPreference(RewriteArrowSymbols, true),
+		.setPreference(RewriteArrowSymbols, true),*/
 	name := "yxorp",
+  packageName in Docker := "yxorp",
+  dockerExposedPorts := Seq(8080),
 	libraryDependencies ++= Seq(
     "com.github.finagle" %% "finch-core" % "0.16.0-M3",
     //"com.softwaremill.macwire" %% "macros" % "2.3.0",
