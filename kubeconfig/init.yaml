@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello
+  labels:
+    app: hello
+spec:
+  containers:
+  - name: hello
+    image: nginx:stable-alpine
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: hello-config
+      mountPath: /etc/nginx
+  volumes:
+  - name: hello-config
+    configMap:
+      name: hello-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hello-config
+data:
+  nginx.conf: |
+    location / {
+        return 200 'Hello, SBTB!';
+        add_header Content-Type text/plain;
+    }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: hello
+  name: hello-service
+spec:
+  ports:
+  - name: web
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: hello
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hello-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /hello
+        backend:
+          serviceName: hello-service
+          servicePort: 80
